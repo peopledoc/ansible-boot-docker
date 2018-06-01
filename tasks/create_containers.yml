@@ -1,0 +1,39 @@
+---
+- when: host.split('.')[-1] == 'lxc'
+  delegate_to: localhost
+  block:
+    - name: Create project network
+      docker_network:
+        name: "{{ project_docker_network }}"
+        appends: true
+      run_once: true
+
+    - name: Create Debian Stretch containers
+      docker_container:
+        name: '{{ job_id ~ host }}'
+        hostname: '{{ job_id ~ host }}'
+        image: 'docker.lan.novapost.net/peopledoc/{{ hostvars[host]["docker_image"] }}'
+        networks:
+          - name: "{{ project_docker_network }}"
+        purge_networks: true
+        dns_servers:
+          - 10.0.3.1 # LXC DNS
+        # These are non privileged container running systemctl, see:
+        # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
+        security_opts: seccomp=unconfined # required on Debian
+        tmpfs:
+          - /tmp
+          - /run
+          - /run/lock
+        volumes:
+          - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      run_once: true
+
+    - add_host:
+        name: '{{ host }}'
+        ansible_host: '{{ job_id ~ host }}'
+        groups: '{{ hostvars[host]["group_names"] }}'
+        ansible_connection: docker
+        ansible_user: root
+        inventory_dir: "{{ hostvars[host]['inventory_dir'] }}"
+      run_once: true
