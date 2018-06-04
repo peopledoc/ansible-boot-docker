@@ -16,8 +16,6 @@
         networks:
           - name: "{{ project_docker_network }}"
         purge_networks: true
-        dns_servers:
-          - 10.0.3.1 # LXC DNS
         # These are non privileged container running systemctl, see:
         # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
         security_opts: seccomp=unconfined # required on Debian
