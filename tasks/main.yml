@@ -6,7 +6,9 @@
     appends: true
   run_once: true
   delegate_to: localhost
-  when: groups["all"]|select('match', '^.+\.lxc$')|list|count
+  when:
+    - project_docker_network is defined
+    - groups["all"]|select('match', '^.+\.lxc$')|list|count
 
 - include_tasks: create_containers.yml
   with_items: '{{ groups["all"] }}'

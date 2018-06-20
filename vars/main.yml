@@ -1,3 +1,0 @@
----
-job_id: "{{ lookup('env', 'JOB_ID') }}"
-project_docker_network: "{{ job_id ~ project_name }}"
