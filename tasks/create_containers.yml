@@ -2,12 +2,6 @@
 - when: host.split('.')[-1] == 'lxc'
   delegate_to: localhost
   block:
-    - name: Create project network
-      docker_network:
-        name: "{{ project_docker_network }}"
-        appends: true
-      run_once: true
-
     - name: Create Debian Stretch containers
       docker_container:
         name: '{{ job_id ~ host }}'
