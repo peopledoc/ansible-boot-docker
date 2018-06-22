@@ -23,7 +23,6 @@
     - add_host:
         name: '{{ host }}'
         ansible_host: '{{ job_id ~ host }}'
-        groups: '{{ hostvars[host]["group_names"] }}'
         ansible_connection: docker
         ansible_user: root
         inventory_dir: "{{ hostvars[host]['inventory_dir'] }}"
