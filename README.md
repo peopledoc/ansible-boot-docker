@@ -21,6 +21,7 @@ Following variables are optional:
 communicate, Docker default network is used if not specified.
 * `boot_docker_host` name and hostname of the container, by default
 `inventory_hostname` is used (and available using `host` variable).
+* `boot_docker_command`: command to execute when the container starts.
 
 Following variable is required:
 * `boot_docker_image` is an available docker image. When this variable isn't
