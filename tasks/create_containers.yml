@@ -19,7 +19,6 @@
           - /run/lock
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      run_once: true
 
     - add_host:
         name: '{{ host }}'
@@ -28,4 +27,3 @@
         ansible_connection: docker
         ansible_user: root
         inventory_dir: "{{ hostvars[host]['inventory_dir'] }}"
-      run_once: true
