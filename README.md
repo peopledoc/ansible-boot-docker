@@ -16,34 +16,41 @@ Requirements
 Role Variables
 --------------
 
-This role need a `project_name` variable to name the docker network used by the
-hosts to communicate.
+Following variables are optional:
+* `boot_docker_network`: name the docker network used by the hosts to
+communicate, Docker default network is used if not specified.
+* `boot_docker_host` name and hostname of the container, by default
+`inventory_hostname` is used (and available using `host` variable).
+
+Following variable is required:
+* `boot_docker_image` is an available docker image
+
+
+Example
+-------
+
+### Inventory
 
 This role suppose the following inventory :
 
 ```ini
-[sae]
-sae.lxc docker_image=sae-base
+[python]
+app1.lxc boot_docker_image=registry.fedoraproject.org/f26/python3
 
-[rabbitmq]
-rabbitmq.lxc docker_image=sae-rabbitmq
-
+[debian]
+app2.lxc boot_docker_image=debian:stable
 ```
 
-`docker_image` is a docker image already created and pushed to the registry when
-using that role.
-
-This role also read the `JOB_ID` environment variable to containerized Jenkins builds.
-
-Example Playbook
-----------------
+### Playbook
+------------
 
 ```yaml
 - hosts: localhost
   roles:
     - role: peopledoc.boot-docker
       vars:
-        project_name: sae
+        boot_docker_network: demo-net
+        boot_docker_host: 'demo-{{ host }}'
 ```
 
 License
