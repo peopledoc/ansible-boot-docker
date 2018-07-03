@@ -20,7 +20,8 @@
         volumes:
           - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
-    - add_host:
+    - name: update inventory
+      add_host:
         name: '{{ host }}'
         ansible_host: '{{ boot_docker_host|default(host) }}'
         groups: '{{ hostvars[host]["group_names"] }}'
