@@ -1,8 +1,8 @@
 ---
-- when: host.split('.')[-1] == 'lxc'
+- when: "hostvars[host].get('boot_docker_image', False)"
   delegate_to: localhost
   block:
-    - name: Create Debian Stretch containers
+    - name: Create containers
       docker_container:
         name: '{{ boot_docker_host|default(host) }}'
         hostname: '{{ boot_docker_host|default(host) }}'
