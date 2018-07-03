@@ -1,0 +1,19 @@
+---
+sudo: required
+dist: trusty
+
+language: python
+python:
+  - '2.7'
+
+env:
+  matrix:
+    - ANSIBLE_REF='ansible<2.7'
+    - ANSIBLE_REF='ansible<2.6'
+
+install:
+  - pip install --upgrade pip setuptools wheel
+  - pip install "${ANSIBLE_REF}" molecule docker
+
+script:
+  - molecule --debug test --driver-name delegated
