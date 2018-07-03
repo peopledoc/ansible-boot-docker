@@ -28,3 +28,4 @@
         ansible_connection: docker
         ansible_user: root
         inventory_dir: "{{ hostvars[host]['inventory_dir'] }}"
+      changed_when: false
