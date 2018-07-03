@@ -35,10 +35,10 @@ This role suppose the following inventory :
 
 ```ini
 [python]
-app1.example boot_docker_image=registry.fedoraproject.org/f26/python3
+app1.lxc boot_docker_image=registry.fedoraproject.org/f26/python3
 
 [debian]
-app2.example boot_docker_image=debian:stable
+app2.lxc boot_docker_image=debian:stable
 ```
 
 ### Playbook
