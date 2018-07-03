@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Eliah Rebstock
   description: Ansible role to run docker containers from inventory
@@ -8,16 +9,16 @@ galaxy_info:
   min_ansible_version: 2.4
 
   platforms:
-  - name: Ubuntu
-    versions:
-    - all
-  - name: Debian
-    versions:
-    - all
-  - name: Arch
-    versions:
-    - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Arch
+      versions:
+        - all
 
   categories:
-  - networking
-  - system
+    - networking
+    - system
