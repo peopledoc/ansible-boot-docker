@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    boot_docker_network: ansible-boot-docker-net
+    boot_docker_host: '{{ host }}-test'
+  pre_tasks:
+    - name: update inventory (delegated-localhost)
+      add_host:
+        name: delegated-localhost
+      changed_when: false
+    - name: update inventory (add container1)
+      add_host:
+        name: container1
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+      changed_when: false
+    - name: update inventory (add anotherhost)
+      add_host:
+        name: anotherhost
+      changed_when: false
+  roles:
+    - role: ansible-boot-docker

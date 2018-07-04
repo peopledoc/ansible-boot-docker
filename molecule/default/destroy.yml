@@ -1,0 +1,19 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  no_log: "{{ not lookup('env', 'MOLECULE_DEBUG') | bool }}"
+  tasks:
+    - name: Delete test containers
+      docker_container:
+        name: '{{ item }}'
+        state: absent
+      loop:
+        - anotherhost
+        - container1-test
+
+    - name: Delete test network
+      docker_network:
+        name: ansible-boot-docker-net
+        state: absent
