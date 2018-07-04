@@ -8,7 +8,7 @@
   delegate_to: localhost
   when:
     - boot_docker_network is defined
-    - groups["all"]|select('match', '^.+\.lxc$')|list|count
+    - groups['all']|map('extract', hostvars, 'boot_docker_image')|select('defined')|list|length
 
 - include_tasks: create_containers.yml
   with_items: '{{ groups["all"] }}'
