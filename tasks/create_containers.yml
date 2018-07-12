@@ -6,7 +6,7 @@
       docker_container:
         name: '{{ boot_docker_host|default(host) }}'
         hostname: '{{ boot_docker_host|default(host) }}'
-        command: '{{ hostvars[host]["boot_docker_command"]|default(omit) }}'
+        command: '{{ hostvars[host]["boot_docker_command"]|default(omit) }}'
         image: '{{ hostvars[host]["boot_docker_image"] }}'
         networks:
           - name: "{{ boot_docker_network|default(omit) }}"
@@ -18,8 +18,8 @@
           - /tmp
           - /run
           - /run/lock
-        volumes:
-          - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        volumes: '{{ hostvars[host]["boot_docker_volumes"]|default([]) + ["/sys/fs/cgroup:/sys/fs/cgroup:ro"] }}'
+        ports: '{{ hostvars[host]["boot_docker_ports"]|default(omit) }}'
 
     - name: update inventory
       add_host:
