@@ -22,6 +22,10 @@ communicate, Docker default network is used if not specified.
 * `boot_docker_host` name and hostname of the container, by default
 `inventory_hostname` is used (and available using `host` variable).
 * `boot_docker_command`: command to execute when the container starts.
+* `boot_docker_ports`: list of published ports following the Docker CLI syntax
+  (`['8080:80']`, etc.).
+* `boot_docker_volumes`: list of volumes to bind following the Docker CLI syntax
+  (`['/host:/container[:ro|rw]']`).
 
 Following variable is required:
 * `boot_docker_image` is an available docker image. When this variable isn't
@@ -37,6 +41,10 @@ This role supposes the following inventory :
 ```ini
 [python]
 app1.example boot_docker_image=registry.fedoraproject.org/f26/python3
+
+[python:vars]
+boot_docker_ports="['8080:80']"
+boot_docker_volumes="['/tmp/data:/data:ro']"
 
 [debian]
 app2.example boot_docker_image=debian:stable
