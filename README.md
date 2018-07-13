@@ -22,6 +22,10 @@ communicate, Docker default network is used if not specified.
 * `boot_docker_host` name and hostname of the container, by default
 `inventory_hostname` is used (and available using `host` variable).
 * `boot_docker_command`: command to execute when the container starts.
+* `boot_docker_ports`: list of published ports following the Docker CLI syntax
+  (`['8080:80']`, etc.).
+* `boot_docker_volumes`: list of volumes to bind following the Docker CLI syntax
+  (`['/host:/container[:ro|rw]']`).
 
 Following variable is required:
 * `boot_docker_image` is an available docker image. When this variable isn't
@@ -43,6 +47,18 @@ app2.example boot_docker_image=debian:stable
 
 [container_not_created]
 app3.example
+```
+
+You should then use `host_vars` or `group_vars` to define other variables :
+
+```yaml
+# host_vars/debian.yml
+
+boot_docker_command: sleep infinity
+boot_docker_volumes:
+  - /tmp/data:/mnt/data:ro
+boot_docker_ports:
+  - 8080:80
 ```
 
 ### Playbook
