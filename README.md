@@ -42,15 +42,23 @@ This role supposes the following inventory :
 [python]
 app1.example boot_docker_image=registry.fedoraproject.org/f26/python3
 
-[python:vars]
-boot_docker_ports="['8080:80']"
-boot_docker_volumes="['/tmp/data:/data:ro']"
-
 [debian]
 app2.example boot_docker_image=debian:stable
 
 [container_not_created]
 app3.example
+```
+
+You should then use `host_vars` or `group_vars` to define other variables :
+
+```yaml
+# host_vars/debian.yml
+
+boot_docker_command: sleep infinity
+boot_docker_volumes:
+  - /tmp/data:/mnt/data:ro
+boot_docker_ports:
+  - 8080:80
 ```
 
 ### Playbook
