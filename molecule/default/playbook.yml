@@ -14,6 +14,10 @@
         name: container1
         boot_docker_image: alpine
         boot_docker_command: tail -F /dev/null
+        boot_docker_ports:
+          - 8080:80
+        boot_docker_volumes:
+          - /tmp:/tmp/host_tmp:ro
       changed_when: false
     - name: update inventory (add anotherhost)
       add_host:

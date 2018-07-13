@@ -18,7 +18,8 @@
           - /tmp
           - /run
           - /run/lock
-        volumes: '{{ hostvars[host]["boot_docker_volumes"]|default([]) + ["/sys/fs/cgroup:/sys/fs/cgroup:ro"] }}'
+        volumes: '{{ hostvars[host]["boot_docker_volumes"]|default([])
+        + ["/sys/fs/cgroup:/sys/fs/cgroup:ro"] }}'
         ports: '{{ hostvars[host]["boot_docker_ports"]|default(omit) }}'
 
     - name: update inventory
