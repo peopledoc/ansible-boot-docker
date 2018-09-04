@@ -19,6 +19,8 @@ Role Variables
 Following variables are optional:
 * `boot_docker_network`: name the docker network used by the hosts to
 communicate, Docker default network is used if not specified.
+* `boot_docker_network_aliases`: list of network aliases for the host
+  on the network. Works only if used with `boot_docker_network`
 * `boot_docker_host` name and hostname of the container, by default
 `inventory_hostname` is used (and available using `host` variable).
 * `boot_docker_command`: command to execute when the container starts.
