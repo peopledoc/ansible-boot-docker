@@ -1,0 +1,5 @@
+---
+boot_docker_network_aliases: []
+boot_docker_purge_networks: true
+boot_docker_network_ipv4: ""
+boot_docker_network_ipv6: ""
