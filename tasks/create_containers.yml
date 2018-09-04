@@ -10,8 +10,10 @@
         image: '{{ hostvars[host]["boot_docker_image"] }}'
         networks:
           - name: "{{ boot_docker_network|default(omit) }}"
+            ipv4_address: "{{ boot_docker_network_ipv4|default(omit) }}"
+            ipv6_address: "{{ boot_docker_network_ipv6|default(omit) }}"
             aliases: "{{ boot_docker_network_aliases|default([]) }}"
-        purge_networks: true
+        purge_networks: "{{ boot_docker_purge_networks|default(true) }}"
         # These are non privileged containers running systemctl, see:
         # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
         security_opts: seccomp=unconfined  # required on Debian
