@@ -30,3 +30,23 @@ def test_volumes_binds():
     )
 
     assert '/tmp:/tmp/host_tmp:ro' in cmd.stdout
+
+
+def test_containers_aliases():
+    cmd = localhost.run(
+        """docker inspect -f \
+        '{{range .NetworkSettings.Networks}}{{.Aliases}}{{end}}' \
+        container2-test"""
+    )
+
+    assert 'container2.test' in cmd.stdout
+    assert 'app2' in cmd.stdout
+
+    cmd = localhost.run(
+         """docker inspect -f \
+         '{{range .NetworkSettings.Networks}}{{.Aliases}}{{end}}' \
+         container3-test"""
+    )
+
+    assert 'container3.test' in cmd.stdout
+    assert 'app3' in cmd.stdout

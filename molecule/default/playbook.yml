@@ -19,6 +19,25 @@
         boot_docker_volumes:
           - /tmp:/tmp/host_tmp:ro
       changed_when: false
+    - name: update inventory (add container2)
+      add_host:
+        name: container2
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+        boot_docker_network_aliases:
+          - container2.test
+          - app2
+      changed_when: false
+    - name: update inventory (add container3)
+      add_host:
+        name: container3
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+        boot_docker_network_aliases:
+          - container3.test
+          - app3
+      changed_when: false
+
     - name: update inventory (add anotherhost)
       add_host:
         name: anotherhost
