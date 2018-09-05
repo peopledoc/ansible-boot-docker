@@ -1,9 +1,6 @@
 ---
-- name: Converge
+- name: Create inventory
   hosts: all
-  vars:
-    boot_docker_network: ansible-boot-docker-net
-    boot_docker_host: '{{ host }}-test'
   pre_tasks:
     - name: update inventory (delegated-localhost)
       add_host:
@@ -42,5 +39,12 @@
       add_host:
         name: anotherhost
       changed_when: false
+
+- name: Converge
+  hosts: all
+  gather_facts: false
   roles:
     - role: ansible-boot-docker
+      vars:
+        boot_docker_network: ansible-boot-docker-net
+        boot_docker_host: '{{ inventory_hostname }}-test'
