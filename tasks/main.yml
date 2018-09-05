@@ -1,6 +1,6 @@
 ---
 
-- name: Create project network
+- name: 'Ensure {{ boot_docker_network }} network is created'
   docker_network:
     name: "{{ boot_docker_network }}"
     appends: true
@@ -11,8 +11,39 @@
     - groups['all']|map('extract', hostvars, 'boot_docker_image')|
         select('defined')|list|length
 
-- include_tasks: create_containers.yml
-  with_items: '{{ groups["all"] }}'
-  loop_control:
-    loop_var: host
-  run_once: true
+- name: 'Create container for {{ boot_docker_host }}'
+  delegate_to: localhost
+  docker_container:
+    name: '{{ boot_docker_host }}'
+    hostname: '{{ boot_docker_host }}'
+    command: '{{ boot_docker_command|default(omit) }}'
+    image: '{{ boot_docker_image }}'
+    networks:
+      - name: "{{ boot_docker_network }}"
+        ipv4_address: "{{ boot_docker_network_ipv4 }}"
+        ipv6_address: "{{ boot_docker_network_ipv6 }}"
+        aliases: "{{ boot_docker_network_aliases }}"
+    purge_networks: "{{ boot_docker_purge_networks }}"
+    # These are non privileged containers running systemctl, see:
+    # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
+    security_opts: seccomp=unconfined  # required on Debian
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    volumes: '{{ boot_docker_volumes + ["/sys/fs/cgroup:/sys/fs/cgroup:ro"] }}'
+    ports: '{{ boot_docker_ports|default(omit) }}'
+  when: boot_docker_image is defined
+  register: result
+
+- name: 'Update inventory - Adding {{ boot_docker_host }}'
+  delegate_to: localhost
+  add_host:
+    name: '{{ inventory_hostname }}'
+    ansible_host: '{{ boot_docker_host }}'
+    groups: '{{ group_names }}'
+    ansible_connection: docker
+    ansible_user: root
+    inventory_dir: "{{ inventory_dir }}"
+  changed_when: false
+  when: result is success

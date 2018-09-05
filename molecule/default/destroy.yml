@@ -12,6 +12,8 @@
       loop:
         - anotherhost
         - container1-test
+        - container2-test
+        - container3-test
 
     - name: Delete test network
       docker_network:

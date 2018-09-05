@@ -1,2 +1,7 @@
 ---
 boot_docker_purge_networks: true
+boot_docker_host: '{{ inventory_hostname }}'
+boot_docker_volumes: []
+boot_docker_network_ipv4: null
+boot_docker_network_ipv6: null
+boot_docker_network_aliases: []
