@@ -76,7 +76,8 @@ boot_docker_ports:
 ------------
 
 ```yaml
-- hosts: localhost
+- hosts: all
+  gather_facts: no
   roles:
     - role: peopledoc.boot-docker
       vars:
