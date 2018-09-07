@@ -1,44 +1,17 @@
 ---
-- name: Create inventory
-  hosts: all
+- name: Update inventory
+  hosts: delegated-localhost
+  gather_facts: false
   pre_tasks:
-    - name: update inventory (delegated-localhost)
+    - name: update inventory
       add_host:
-        name: delegated-localhost
+        name: '{{ item }}'
       changed_when: false
-    - name: update inventory (add container1)
-      add_host:
-        name: container1
-        boot_docker_image: alpine
-        boot_docker_command: tail -F /dev/null
-        boot_docker_ports:
-          - 8080:80
-        boot_docker_volumes:
-          - /tmp:/tmp/host_tmp:ro
-      changed_when: false
-    - name: update inventory (add container2)
-      add_host:
-        name: container2
-        boot_docker_image: alpine
-        boot_docker_command: tail -F /dev/null
-        boot_docker_network_aliases:
-          - container2.test
-          - app2
-      changed_when: false
-    - name: update inventory (add container3)
-      add_host:
-        name: container3
-        boot_docker_image: alpine
-        boot_docker_command: tail -F /dev/null
-        boot_docker_network_aliases:
-          - container3.test
-          - app3
-      changed_when: false
-
-    - name: update inventory (add anotherhost)
-      add_host:
-        name: anotherhost
-      changed_when: false
+      with_items:
+        - container1
+        - container2
+        - container3
+        - anotherhost
 
 - name: Converge
   hosts: all

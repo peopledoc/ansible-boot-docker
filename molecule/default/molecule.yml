@@ -19,6 +19,27 @@ provisioner:
     host_vars:
       delegated-localhost:
         ansible_connection: local
+      container1:
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+        boot_docker_ports:
+          - 8080:80
+        boot_docker_volumes:
+          - /tmp:/tmp/host_tmp:ro
+        boot_docker_network: '{{ network }}'
+      container2:
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+        boot_docker_network_aliases:
+          - container2.test
+          - app2
+      container3:
+        boot_docker_image: alpine
+        boot_docker_command: tail -F /dev/null
+        boot_docker_network_aliases:
+          - container3.test
+          - app3
+      anotherhost:
   lint:
     name: ansible-lint
     enabled: true
