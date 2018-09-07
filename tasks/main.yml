@@ -12,7 +12,6 @@
         select('defined')|list|length
 
 - name: 'Create container for {{ boot_docker_host }}'
-  delegate_to: localhost
   docker_container:
     name: '{{ boot_docker_host }}'
     hostname: '{{ boot_docker_host }}'
@@ -37,7 +36,6 @@
   register: result
 
 - name: 'Update inventory - Adding {{ boot_docker_host }}'
-  delegate_to: localhost
   add_host:
     name: '{{ inventory_hostname }}'
     ansible_host: '{{ boot_docker_host }}'

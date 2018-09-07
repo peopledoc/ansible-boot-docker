@@ -80,6 +80,7 @@ boot_docker_ports:
   gather_facts: no
   roles:
     - role: peopledoc.boot-docker
+      delegate_to: localhost  # another host could be used here
       vars:
         boot_docker_network: demo-net
         boot_docker_host: 'demo-{{ host }}'

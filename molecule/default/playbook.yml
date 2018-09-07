@@ -45,6 +45,7 @@
   gather_facts: false
   roles:
     - role: ansible-boot-docker
+      delegate_to: localhost
       vars:
         boot_docker_network: ansible-boot-docker-net
         boot_docker_host: '{{ inventory_hostname }}-test'
