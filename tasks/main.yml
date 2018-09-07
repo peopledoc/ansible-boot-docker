@@ -1,13 +1,16 @@
 ---
+- name: create boot_docker_networks from boot_docker_network (backward compat)
+  set_fact:
+    boot_docker_networks:
+      - name: "{{ boot_docker_network }}"
+  when: not boot_docker_networks and boot_docker_network is defined
 
-- name: 'Ensure {{ boot_docker_network }} network is created'
+- name: 'Create Docker networks'
   docker_network:
-    name: "{{ boot_docker_network }}"
+    name: "{{ item.name }}"
     appends: true
-  run_once: true
-  delegate_to: localhost
+  with_items: '{{ boot_docker_networks }}'
   when:
-    - boot_docker_network is defined
     - groups['all']|map('extract', hostvars, 'boot_docker_image')|
         select('defined')|list|length
 
@@ -17,11 +20,7 @@
     hostname: '{{ boot_docker_host }}'
     command: '{{ boot_docker_command|default(omit) }}'
     image: '{{ boot_docker_image }}'
-    networks:
-      - name: "{{ boot_docker_network }}"
-        ipv4_address: "{{ boot_docker_network_ipv4 }}"
-        ipv6_address: "{{ boot_docker_network_ipv6 }}"
-        aliases: "{{ boot_docker_network_aliases }}"
+    networks: '{{ boot_docker_networks }}'
     purge_networks: "{{ boot_docker_purge_networks }}"
     # These are non privileged containers running systemctl, see:
     # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
