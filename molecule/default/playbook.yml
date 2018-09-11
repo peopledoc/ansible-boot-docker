@@ -16,6 +16,7 @@
 - name: Converge
   hosts: all
   gather_facts: false
+  serial: 1
   roles:
     - role: ansible-boot-docker
       delegate_to: localhost
