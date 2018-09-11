@@ -71,6 +71,7 @@ boot_docker_ports:
 ```yaml
 - hosts: all
   gather_facts: no
+  serial: 1  # mandatory
   roles:
     - role: peopledoc.boot-docker
       delegate_to: localhost  # another host could be used here
