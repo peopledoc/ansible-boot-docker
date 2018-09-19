@@ -34,6 +34,9 @@ Docker default network is used if not specified. See networks parameter of
   (`['8080:80']`, etc.).
 * `boot_docker_volumes`: list of volumes to bind following the Docker CLI syntax
   (`['/host:/container[:ro|rw]']`).
+* `boot_docker_security_opts`: By default, use a Systemd compatible seccomp
+profile. See `security_opts` parameter of `docker_container` module.
+
 
 Example
 -------

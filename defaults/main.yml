@@ -3,3 +3,8 @@ boot_docker_host: '{{ inventory_hostname }}'
 boot_docker_networks: []
 boot_docker_purge_networks: true
 boot_docker_volumes: []
+boot_docker_seccomp_url: |-
+  https://src.fedoraproject.org/rpms/docker/raw/master/f/seccomp.json
+boot_docker_seccomp: |-
+  {{ 'seccomp=' ~ lookup('url', boot_docker_seccomp_url, split_lines=False) }}
+boot_docker_security_opts: "{{ [boot_docker_seccomp] }}"
