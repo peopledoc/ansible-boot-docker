@@ -1,18 +1,54 @@
 ---
+- name: create boot_docker_networks from boot_docker_network (backward compat)
+  set_fact:
+    boot_docker_networks:
+      - name: "{{ boot_docker_network }}"
+  when: not boot_docker_networks and boot_docker_network is defined
 
-- name: Create project network
+- name: 'Create Docker networks'
   docker_network:
-    name: "{{ boot_docker_network }}"
+    name: "{{ item.name }}"
     appends: true
-  run_once: true
-  delegate_to: localhost
+  with_items: '{{ boot_docker_networks }}'
   when:
-    - boot_docker_network is defined
     - groups['all']|map('extract', hostvars, 'boot_docker_image')|
         select('defined')|list|length
 
-- include_tasks: create_containers.yml
-  with_items: '{{ groups["all"] }}'
-  loop_control:
-    loop_var: host
-  run_once: true
+- name: Check if security option is supported
+  command: |-
+    {% raw %}docker info --format '{{json .SecurityOptions}}'{% endraw %}
+  register: _security_opts
+  changed_when: false
+
+- name: 'Create container for {{ boot_docker_host }}'
+  docker_container:
+    name: '{{ boot_docker_host }}'
+    hostname: '{{ boot_docker_host }}'
+    command: '{{ boot_docker_command|default(omit) }}'
+    image: '{{ boot_docker_image }}'
+    networks: '{{ boot_docker_networks }}'
+    purge_networks: "{{ boot_docker_purge_networks }}"
+    # These are non privileged containers running systemctl, see:
+    # https://developers.redhat.com/blog/2016/09/13/running-systemd-in-a-non-privileged-container/
+    security_opts: >-
+      {{ (_security_opts.stdout and (_security_opts.stdout|from_json))|
+      ternary(boot_docker_security_opts, omit) }}
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    volumes: '{{ boot_docker_volumes + ["/sys/fs/cgroup:/sys/fs/cgroup:ro"] }}'
+    ports: '{{ boot_docker_ports|default(omit) }}'
+  when: boot_docker_image is defined
+  register: result
+
+- name: 'Update inventory - Adding {{ boot_docker_host }}'
+  add_host:
+    name: '{{ inventory_hostname }}'
+    ansible_host: '{{ boot_docker_host }}'
+    groups: '{{ group_names }}'
+    ansible_connection: docker
+    ansible_user: root
+    inventory_dir: "{{ inventory_dir }}"
+  changed_when: false
+  when: result is success

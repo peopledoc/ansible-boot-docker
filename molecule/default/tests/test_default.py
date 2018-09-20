@@ -1,3 +1,6 @@
+import json
+import unittest
+
 import testinfra
 
 localhost = testinfra.get_host('local://')
@@ -50,3 +53,17 @@ def test_containers_aliases():
 
     assert 'container3.test' in cmd.stdout
     assert 'app3' in cmd.stdout
+
+
+def test_containers_security_opts():
+
+    cmd = localhost.run("docker info --format '{{json .SecurityOptions}}'")
+    if not json.loads(cmd.stdout):
+        raise unittest.SkipTest('seccomp not supported')
+
+    cmd = localhost.run(
+        "docker inspect -f '{{.HostConfig.SecurityOpt}}' container1-test"
+    )
+
+    assert 'unconfined' not in cmd.stdout
+    assert cmd.stdout.startswith('[seccomp={')
